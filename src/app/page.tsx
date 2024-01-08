@@ -7,6 +7,7 @@ import {
     CopyButton,
     Modal,
     TextInput,
+    Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
@@ -33,9 +34,21 @@ export default function Home() {
         let convertedString: string | null = null;
 
         if (password) {
-            convertedString = `set mysql_connection_string "server=${server};port=${port};database=${database};user=${user};password=${password};charset=${charset};"`;
+            convertedString = `set mysql_connection_string "server=${server};port=${port};database=${database.replaceAll(
+                "%40",
+                "@"
+            )};user=${user.replaceAll(
+                "%40",
+                "@"
+            )};password=${password.replaceAll(
+                "%40",
+                "@"
+            )};charset=${charset};"`;
         } else {
-            convertedString = `set mysql_connection_string "server=${server};port=${port};database=${database};user=${user};charset=${charset};"`;
+            convertedString = `set mysql_connection_string "server=${server};port=${port};database=${database.replaceAll(
+                "%40",
+                "@"
+            )};user=${user.replaceAll("%40", "@")};charset=${charset};"`;
         }
 
         return convertedString;
@@ -93,7 +106,7 @@ export default function Home() {
                     setInputValue("");
                 }}
             >
-                <TextInput disabled value={convertedString} />
+                <Textarea disabled value={convertedString} />
                 <CopyButton value={convertedString}>
                     {({ copied, copy }) => (
                         <Button color={copied ? "teal" : "blue"} onClick={copy}>
